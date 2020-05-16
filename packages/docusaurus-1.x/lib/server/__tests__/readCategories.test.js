@@ -8,6 +8,7 @@
 const readCategories = require('../readCategories');
 const generalMetadata = require('./__fixtures__/metadata.js');
 const subCategoryMetadata = require('./__fixtures__/metadata-subcategories.js');
+const multilevelSubCategoryMetadata = require('./__fixtures__/metadata-multilevel-subcategories.js');
 
 const languages = [
   {
@@ -46,6 +47,19 @@ describe('readCategories', () => {
 
   test('should return proper data with categories and sub categories', () => {
     const categories = readCategories('docs', subCategoryMetadata, languages);
+
+    expect(categories.en).toBeDefined();
+    expect(categories.ko).toBeDefined();
+    expect(categories.en.length).toBe(2);
+    expect(categories.en).toMatchSnapshot();
+  });
+
+  test('should return proper data with categories and multiple levels of sub categories', () => {
+    const categories = readCategories(
+      'docs',
+      multilevelSubCategoryMetadata,
+      languages,
+    );
 
     expect(categories.en).toBeDefined();
     expect(categories.ko).toBeDefined();

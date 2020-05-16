@@ -70,34 +70,34 @@ function readSidebar(sidebars = {}) {
     const categories = sidebars[sidebar];
     const sidebarItems = [];
 
+    const readSubcategory = (category, parentSubcategory, subcategory) => (
+      categoryItem,
+    ) => {
+      if (typeof categoryItem === 'object') {
+        switch (categoryItem.type) {
+          case 'subcategory':
+            categoryItem.ids.forEach(
+              readSubcategory(category, subcategory, categoryItem.label),
+            );
+            return;
+          default:
+            return;
+        }
+      }
+
+      // Is a regular id value.
+      sidebarItems.push({
+        id: categoryItem,
+        category,
+        parentSubcategory: parentSubcategory || null,
+        subcategory: subcategory || null,
+        order: sidebarItems.length + 1,
+      });
+    };
+
     Object.keys(categories).forEach((category) => {
       const categoryItems = categories[category];
-      categoryItems.forEach((categoryItem) => {
-        if (typeof categoryItem === 'object') {
-          switch (categoryItem.type) {
-            case 'subcategory':
-              categoryItem.ids.forEach((subcategoryItem) => {
-                sidebarItems.push({
-                  id: subcategoryItem,
-                  category,
-                  subcategory: categoryItem.label,
-                  order: sidebarItems.length + 1,
-                });
-              });
-              return;
-            default:
-              return;
-          }
-        }
-
-        // Is a regular id value.
-        sidebarItems.push({
-          id: categoryItem,
-          category,
-          subcategory: null,
-          order: sidebarItems.length + 1,
-        });
-      });
+      categoryItems.forEach(readSubcategory(category));
     });
 
     for (let i = 0; i < sidebarItems.length; i++) {
@@ -119,6 +119,7 @@ function readSidebar(sidebars = {}) {
         sidebar,
         category: item.category,
         subcategory: item.subcategory,
+        parentSubcategory: item.parentSubcategory,
         order: item.order,
       };
     }
@@ -190,6 +191,7 @@ function processMetadata(file, refDir) {
     metadata.sidebar = item.sidebar;
     metadata.category = item.category;
     metadata.subcategory = item.subcategory;
+    metadata.parentSubcategory = item.parentSubcategory;
     metadata.order = item.order;
 
     if (item.next) {
