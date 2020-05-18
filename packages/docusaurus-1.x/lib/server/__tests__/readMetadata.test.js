@@ -7,6 +7,7 @@
 
 const {readSidebar} = require('../readMetadata');
 const sidebarSubcategories = require('./__fixtures__/sidebar-subcategories');
+const sidebarMultilevelSubcategories = require('./__fixtures__/sidebar-multilevel-subcategories');
 
 jest.mock('../env', () => ({
   translation: {
@@ -37,6 +38,10 @@ describe('readMetadata', () => {
   describe('readSidebar', () => {
     test('should verify sub category data and verify order', () => {
       const items = readSidebar(sidebarSubcategories);
+      expect(items).toMatchSnapshot();
+    });
+    test('should verify multilevel sub category data and verify order', () => {
+      const items = readSidebar(sidebarMultilevelSubcategories);
       expect(items).toMatchSnapshot();
     });
   });

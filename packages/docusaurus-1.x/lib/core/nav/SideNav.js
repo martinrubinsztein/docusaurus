@@ -89,19 +89,21 @@ class SideNav extends React.Component {
           {arrow}
         </h3>
         <ul className={ulClassName}>
-          {categoryItem.children.map((item) => {
-            switch (item.type) {
-              case 'LINK':
-                return this.renderItemLink(item);
-              case 'SUBCATEGORY':
-                return this.renderSubcategory(item);
-              default:
-                return null;
-            }
-          })}
+          {categoryItem.children.map(this.renderItem)}
         </ul>
       </div>
     );
+  };
+
+  renderItem = (item) => {
+    switch (item.type) {
+      case 'LINK':
+        return this.renderItemLink(item);
+      case 'SUBCATEGORY':
+        return this.renderSubcategory(item);
+      default:
+        return null;
+    }
   };
 
   renderSubcategory = (subcategoryItem) => (
@@ -109,7 +111,7 @@ class SideNav extends React.Component {
       <h4 className="navGroupSubcategoryTitle">
         {this.getLocalizedCategoryString(subcategoryItem.title)}
       </h4>
-      <ul>{subcategoryItem.children.map(this.renderItemLink)}</ul>
+      <ul>{subcategoryItem.children.map(this.renderItem)}</ul>
     </div>
   );
 
